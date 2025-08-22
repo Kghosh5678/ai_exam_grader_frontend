@@ -1,0 +1,8 @@
+streamlit
+pytesseract
+pdf2image
+pillow
+sentence-transformers
+requests
+numpy
+
