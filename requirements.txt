@@ -5,4 +5,6 @@ pillow
 sentence-transformers
 requests
 numpy
+pymupdf
+
 

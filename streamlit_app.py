@@ -5,6 +5,7 @@ from PIL import Image
 import io
 import re
 import requests
+import fitz  # PyMuPDF
 
 # Backend API URLs
 TRAIN_URL = "http://57.255.238.178:5000/train"
@@ -15,10 +16,21 @@ def ocr_from_image(image):
     return pytesseract.image_to_string(image)
 
 # OCR function for multi-page PDFs
+#def ocr_from_pdf(pdf_bytes):
+#    images = convert_from_bytes(pdf_bytes)
+#    text_pages = [ocr_from_image(image) for image in images]
+#    return "\n".join(text_pages)
+
+
 def ocr_from_pdf(pdf_bytes):
-    images = convert_from_bytes(pdf_bytes)
-    text_pages = [ocr_from_image(image) for image in images]
-    return "\n".join(text_pages)
+    text = ""
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    for page in doc:
+        pix = page.get_pixmap(dpi=200)
+        img = Image.open(io.BytesIO(pix.tobytes()))
+        text += pytesseract.image_to_string(img) + "\n"
+    return text
+
 
 # Function to split questions from text
 def split_student_answers(text):
